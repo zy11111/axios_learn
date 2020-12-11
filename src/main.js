@@ -3,11 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-// import { ContactList, Toast  } from 'vant';
-
-// Vue.use(ContactList, Toast );
-
 Vue.config.productionTip = false
+
+import Http from './service/api'
+Vue.prototype.$Http = Http;
 
 new Vue({
   router,

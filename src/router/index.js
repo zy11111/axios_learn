@@ -9,7 +9,8 @@ const routes = [
     path: '/',
     // name: 'Home',
     // component: Home
-    redirectTo: '/contact'
+    redirectTo: '/contact',
+    component: () => import('../views/Contact.vue')
   },
   {
     path: '/about',
@@ -22,7 +23,7 @@ const routes = [
   {
     path: '/contact',
     name: 'Contact',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Contact.vue')
+    component: () => import('../views/Contact.vue')
     // component: () => import('../views/Contact.vue')
   }
 ]

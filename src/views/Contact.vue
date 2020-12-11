@@ -8,7 +8,7 @@
     />
     <van-popup v-model:show="show" position="bottom" :style="{ height: '100%' }">
       <van-contact-edit
-        is-edit
+        :is-edit="isEdit"
         :contact-info="editingContact"
         @save="onSave"
         @delete="onDelete"
@@ -18,10 +18,8 @@
 </template>
 
 <script>
-// import Vue from 'vue';
 import { ContactList, Toast, ContactEdit, Popup } from 'vant';
 
-// Vue.use(ContactList, Toast );
 export default {
   components: {
     [ContactList.name]: ContactList,
@@ -31,36 +29,93 @@ export default {
   data() {
     return {
       chosenContactId: '1',
-      list: [
-        {
-          id: '1',
-          name: '张三',
-          tel: '13000000000',
-          isDefault: true,
-        },
-        {
-          id: '2',
-          name: '李四',
-          tel: '1310000000',
-        },
-      ],
+      list: [],
       show: false,
       editingContact: {},
+      isEdit: false
     }
   },
+  created() {
+    this.getList();
+  },
   methods: {
+    async getList() {
+      let res = await this.$Http.getContactList()
+      if(res.code == 200) {
+        this.list = res.data;
+      }
+      // .then(res => {
+      //   console.log(res)
+      //   if(res.code  == 200) {
+      //     this.list = res.data;
+      //   }
+      // })
+      // this.$Http.getContactList(function(res) {
+      //   console.log(res)
+      //   if(res.code  == 200) {
+      //     this.list = res.data;
+      //   }
+      // })
+    },
     onAdd() {
       this.show = true;
+      this.isEdit = false;
+      this.editingContact = {};
     },
     onEdit(contact) {
       this.editingContact = contact;
       this.show = true;
+      this.isEdit = true;
     },
-    onSave(contactInfo) {
-      this.show = false;
+    async onSave(contactInfo) {
+      let res;
+      if(this.isEdit) {
+        res = await this.$Http.editContact(this.editingContact.id, contactInfo)
+        if(res.code == 200) {
+          Toast("编辑成功");
+          this.show = false;
+          this.getList();
+        }
+        // .then(res => {
+        //   if(res.code == 200) {
+        //     Toast("编辑成功");
+        //     this.show = false;
+        //     this.getList();
+        //   }
+        // })
+        /* .catch(() => {
+          Toast("请求失败，请稍后重试")
+        }) */
+      } else {
+        res = await this.$Http.addContactJson(contactInfo)
+        if(res.code == 200) {
+          Toast("添加成功");
+          this.show = false;
+          this.getList();
+        }
+        // .then(res => {
+        //   if(res.code == 200) {
+        //     Toast("添加成功");
+        //     this.show = false;
+        //     this.getList();
+        //   }
+        // })
+      }
     },
-    onDelete(contactInfo) {
-      this.show = false;
+    async onDelete(contactInfo) {
+      let res = await this.$Http.delContact(contactInfo.id)
+      if(res.code == 200) {
+        Toast('删除成功');
+        this.show = false;
+        this.getList();
+      }
+      // .then(res => {
+      //   if(res.code == 200) {
+      //     Toast('删除成功');
+      //     this.show = false;
+      //     this.getList();
+      //   }
+      // })
     },
   }
 }
