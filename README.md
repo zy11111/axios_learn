@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # axios_learn
 
 ## Project setup
@@ -32,6 +31,3 @@ url	| method |	参数 |	备注
 /contact/new/json	| post	| name,tel	| content-type:application/json
 /contact/edit	| put	| name,tel,id	| content-type:application/json
 /contact	| delete	| id	| 参数拼接在url上
-=======
-# axios_learn
->>>>>>> 266654d6cfaee36a2c5904641625d56435054b66
